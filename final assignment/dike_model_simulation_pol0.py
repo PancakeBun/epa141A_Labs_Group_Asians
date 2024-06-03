@@ -13,7 +13,8 @@ from problem_formulation import get_model_for_problem_formulation
 if __name__ == "__main__":
     ema_logging.log_to_stderr(ema_logging.INFO)
 
-    dike_model, planning_steps = get_model_for_problem_formulation(3)
+    # dike_model, planning_steps = get_model_for_problem_formulation(3) # default ooi
+    dike_model, planning_steps = get_model_for_problem_formulation(6) # ooi for dike ring 3
 
     # Build a user-defined scenario and policy:
     reference_values = {
@@ -69,4 +70,5 @@ if __name__ == "__main__":
        results = evaluator.perform_experiments(scenarios=10, policies=policy0,
                                                uncertainty_sampling=Samplers.SOBOL)
 
-    save_results(results, os.path.join('experiment', 'pol0.tar.gz'))
+    # save_results(results, os.path.join('experiment', 'pol0.tar.gz')) # save results with default ooi
+    save_results(results, os.path.join('experiment', 'pol0_ooi3.tar.gz')) # save results with ooi for dike ring 3

@@ -48,6 +48,7 @@ def get_model_for_problem_formulation(problem_formulation_id):
                              3: costs and casualties disaggregated over dike rings, and room for the river and evacuation costs
                              4: Expected damages, dike investment cost and casualties disaggregated over dike rings and room for the river and evacuation costs
                              5: disaggregate over time and space
+                             6: Dike ring 3 outcome of interest: Expected Annual Damage, Dike Investment Costs, Expected number of death
 
     Notes
     -----
@@ -368,6 +369,17 @@ def get_model_for_problem_formulation(problem_formulation_id):
 
         outcomes.append(ArrayOutcome("RfR Total Costs"))
         outcomes.append(ArrayOutcome("Expected Evacuation Costs"))
+        dike_model.outcomes = outcomes
+
+    # OOI for dike ring 3: Expected Annual Damage, Dike Investment Costs, Expected number of death
+    elif problem_formulation_id == 6:
+        outcomes = [ScalarOutcome("A.3_%s" % ooi,
+                                  variable_name="A.3_%s" % ooi,
+                                  function=sum_over,
+                                  kind=direction)
+                    for ooi in ["Expected Annual Damage",
+                                "Dike Investment Costs",
+                                "Expected Number of Deaths"]]
         dike_model.outcomes = outcomes
 
     else:
