@@ -7,6 +7,8 @@ import pandas as pd
 from ema_workbench import (Model, MultiprocessingEvaluator, Policy, Scenario, Samplers, ScalarOutcome,
                            ema_logging, load_results, save_results)
 from ema_workbench.em_framework import (sample_uncertainties, ArchiveLogger)
+from ema_workbench.analysis import parcoords
+from matplotlib import pyplot as plt
 
 from problem_formulation import get_model_for_problem_formulation
 
@@ -55,6 +57,7 @@ if __name__ == "__main__":
     problem_formulation_id = 6
     dike_model, planning_step = get_model_for_problem_formulation(problem_formulation_id)
 
+    n_scenarios = 100 #range [200, 500]
     scenarios = sample_uncertainties(dike_model, n_scenarios)
 
     annual_damage_percentile = 50
@@ -81,11 +84,26 @@ if __name__ == "__main__":
         )
     ]
 
+    nfe = int(1000) #range [5000 - 50000]
     with MultiprocessingEvaluator(dike_model) as evaluator:
         robust_results = evaluator.robust_optimize(
             robustness_functions,
             scenarios,
             nfe=nfe,
+            epsilons=[0.05] * len(robustness_functions),
         )
 
+    # write scenarios to csv
+    pd.DataFrame(scenarios.designs, columns=scenarios.params).to_csv(os.path.join('experiment', 'scenarios(20_1000).csv'), index=False)
+    # write policies to csv
+    robust_results.to_csv(os.path.join('experiment', 'robust_policies(20_1000).csv'), index=False)
     
+    # save robustness scores to graph
+    data = robust_results.loc[:, [o.name for o in robustness_functions]]
+    limits = parcoords.get_limits(data)
+
+    paraxes = parcoords.ParallelAxes(limits)
+    paraxes.plot(data)
+#    paraxes.invert_axis("90th percentile max_p")
+#    plt.show()
+    plt.savefig('img/snr__all__robustplot(100_1000).png')
