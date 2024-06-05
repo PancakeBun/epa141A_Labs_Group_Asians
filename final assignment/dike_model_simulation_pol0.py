@@ -64,11 +64,11 @@ if __name__ == "__main__":
 
     # series run
     # experiments, outcomes = perform_experiments(dike_model, ref_scenario, 5)
-
+    n_scenarios = 500
     # multiprocessing
     with MultiprocessingEvaluator(dike_model) as evaluator:
-       results = evaluator.perform_experiments(scenarios=10, policies=policy0,
+       results = evaluator.perform_experiments(scenarios=n_scenarios, policies=policy0,
                                                uncertainty_sampling=Samplers.SOBOL)
 
     # save_results(results, os.path.join('experiment', 'pol0.tar.gz')) # save results with default ooi
-    save_results(results, os.path.join('experiment', 'pol0_ooi3.tar.gz')) # save results with ooi for dike ring 3
+    save_results(results, os.path.join('experiment', f'pol0_sc{n_scenarios}.tar.gz')) # save results with ooi for dike ring 3
