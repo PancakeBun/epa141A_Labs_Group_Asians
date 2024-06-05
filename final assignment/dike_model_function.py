@@ -3,6 +3,8 @@ Created on Tue Oct 31 13:18:05 2017
 
 @author: ciullo
 """
+import os
+from pathlib import Path
 import copy
 import numpy as np
 import pandas as pd
@@ -34,7 +36,10 @@ class DikeNetwork:
         )
 
         # Load hydrological statistics:
-        self.A = pd.read_excel("./data/hydrology/werklijn_params.xlsx")
+        # self.A = pd.read_excel("./data/hydrology/werklijn_params.xlsx")
+        self.A = pd.read_excel(os.path.join('data', 'hydrology', 'werklijn_params.xlsx'))
+        # data_folder = str(Path(__file__).parent) + f"/test/data/{dataset_name}"
+
 
         lowQ, highQ = werklijn_inv([0.992, 0.99992], self.A)
         self.Qpeaks = np.unique(

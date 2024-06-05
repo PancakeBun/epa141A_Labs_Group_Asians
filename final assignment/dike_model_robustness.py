@@ -61,7 +61,7 @@ if __name__ == "__main__":
     problem_formulation_id = 6
     dike_model, planning_step = get_model_for_problem_formulation(problem_formulation_id)
 
-    for i in range(5):
+    for i in range(1):
         n_scenarios = 10 #range [200, 500]
         scenarios = sample_uncertainties(dike_model, n_scenarios)
 
@@ -89,7 +89,7 @@ if __name__ == "__main__":
             )
         ]
 
-        nfe = int(100) #range [5000 - 50000]
+        nfe = 100 #range [5000 - 50000]
         with MultiprocessingEvaluator(dike_model) as evaluator:
             robust_results = evaluator.robust_optimize(
                 robustness_functions,
