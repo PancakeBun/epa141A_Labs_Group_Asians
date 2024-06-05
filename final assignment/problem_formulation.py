@@ -49,6 +49,7 @@ def get_model_for_problem_formulation(problem_formulation_id):
                              4: Expected damages, dike investment cost and casualties disaggregated over dike rings and room for the river and evacuation costs
                              5: disaggregate over time and space
                              6: Dike ring 3 outcome of interest: Expected Annual Damage, Dike Investment Costs, Expected number of death
+                             7: expected damages, dike investment costs and casualties disaggregated over dike rings, and room for the river and evacuation costs
 
     Notes
     -----
@@ -380,6 +381,57 @@ def get_model_for_problem_formulation(problem_formulation_id):
                     for ooi in ["Expected Annual Damage",
                                 "Dike Investment Costs",
                                 "Expected Number of Deaths"]]
+        dike_model.outcomes = outcomes
+
+    # expected damages, dike investment costs and casualties disaggregated over dike rings, and room for the river and evacuation costs
+    elif problem_formulation_id == 7:
+        outcomes = []
+
+        for dike in function.dikelist:
+            outcomes.append(
+                ScalarOutcome(
+                    f"{dike}_Dike Investment Costs",
+                    variable_name=f"{dike}_Dike Investment Costs",
+                    function=sum_over,
+                    kind=direction,
+                )
+            )
+
+            outcomes.append(
+                ScalarOutcome(
+                    f"{dike}_Expected Annual Damage",
+                    variable_name=f"{dike}_Expected Annual Damage",
+                    function=sum_over,
+                    kind=direction,
+                )
+            )
+
+            outcomes.append(
+                ScalarOutcome(
+                    f"{dike}_Expected Number of Deaths",
+                    variable_name=f"{dike}_Expected Number of Deaths",
+                    function=sum_over,
+                    kind=direction,
+                )
+            )
+
+        outcomes.append(
+            ScalarOutcome(
+                "RfR Total Costs",
+                variable_name="RfR Total Costs",
+                function=sum_over,
+                kind=direction,
+            )
+        )
+        outcomes.append(
+            ScalarOutcome(
+                "Expected Evacuation Costs",
+                variable_name="Expected Evacuation Costs",
+                function=sum_over,
+                kind=direction,
+            )
+        )
+
         dike_model.outcomes = outcomes
 
     else:
