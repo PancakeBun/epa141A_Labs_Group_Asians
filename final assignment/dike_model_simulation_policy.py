@@ -1,3 +1,11 @@
+"""
+Run experiments using:
+    100 randomly generated scenarios. These scenarios were input to the robust_optimize() to identify the most robust policies.
+    the robust policies that the robust_optimize() function produce.
+
+The output of the experiments will be used in sensitivity analysis to identify favorable policies.
+"""
+
 import os
 import time
 import random

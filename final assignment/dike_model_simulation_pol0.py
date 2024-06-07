@@ -1,3 +1,8 @@
+"""
+Run models on 20000 randomly generated scenarios.
+The experiments and outcomes are used for uncertainty sensitivity analysis and scenario discoveries in analysis.ipynb
+"""
+
 import os
 import time
 from ema_workbench import save_results
