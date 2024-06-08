@@ -23,6 +23,9 @@ python -m venv venv
 source venv/bin/activate
 python -m pip install --upgrade ema_workbench
 python -m pip install ipyparallel
+python -m pip install networkx
+python -m pip install openpyxl
+python -m pip install xlrd
 
-python ./test.py
-# mpiexec -n 1 python3 ./test.py
+#python ./test.py
+ mpiexec -n 1 python3 ./test.py
