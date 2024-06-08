@@ -27,8 +27,8 @@ if __name__ == '__main__':
     # generate scenarios
     n_scenarios = 5
     scenarios = pd.read_csv(os.path.join('experiment', 'scenario_cart.csv')).rename(columns={'Unnamed: 0': 'uncertainties'}).set_index('uncertainties')
-    scenarios = scenarios.iloc[:, min(n_scenarios, len(scenarios))]
-    scenarios = scenarios.to_dict('dict')
+    scenarios = scenarios.iloc[:, :min(n_scenarios, len(scenarios))]
+    scenarios = scenarios.to_dict()
     # reference scenarios
     reference_values = {
         "Bmax": 175,
