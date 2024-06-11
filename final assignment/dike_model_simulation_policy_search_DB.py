@@ -27,7 +27,7 @@ if __name__ == '__main__':
     # generate scenarios
     n_scenarios = 5
     scenarios = pd.read_csv(os.path.join('experiment', 'scenario_cart.csv')).rename(columns={'Unnamed: 0': 'uncertainties'}).set_index('uncertainties')
-    scenarios = scenarios.iloc[:, :min(n_scenarios, len(scenarios))]
+    scenarios = scenarios.iloc[:, :min(n_scenarios, len(scenarios.columns))]
     scenarios = scenarios.to_dict()
     # reference scenarios
     reference_values = {
@@ -61,7 +61,9 @@ if __name__ == '__main__':
                               function=lambda x: max(0, x - threshold_investment))]
 
     n_seed = 5
-    nfe = 100000
+    # nfe = 100000
+    nfe = 10
+
     # find most favorable policies for each scenario
     for box, scenario in scenarios.items():
 
@@ -81,7 +83,7 @@ if __name__ == '__main__':
             ),
                 EpsilonProgress(),
             ]
-            with MPIEvaluator(dike_model) as evaluator:
+            with MultiprocessingEvaluator(dike_model) as evaluator:
                 results, convergence = evaluator.optimize(nfe=nfe, searchover='levers',
                                                           reference=ref_scenario,
                                                           epsilons=[0.025] * len(dike_model.outcomes),
