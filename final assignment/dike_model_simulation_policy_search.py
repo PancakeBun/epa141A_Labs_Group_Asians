@@ -20,13 +20,13 @@ from ema_workbench.util import ema_logging
 from problem_formulation import get_model_for_problem_formulation
 
 if __name__ == '__main__':
-    problem_formulation_id = 6
+    problem_formulation_id = 8
     dike_model, planning_step = get_model_for_problem_formulation(problem_formulation_id)
 
     # generate scenarios
     n_scenarios = 5
     scenarios = pd.read_csv(os.path.join('experiment', 'scenario_cart.csv')).rename(columns={'Unnamed: 0': 'uncertainties'}).set_index('uncertainties')
-    scenarios = scenarios.iloc[:, :min(n_scenarios, len(scenarios))]
+    scenarios = scenarios.iloc[:, :min(n_scenarios, len(scenarios.columns))]
     scenarios = scenarios.to_dict('dict')
     # reference scenarios
     reference_values = {
@@ -49,18 +49,18 @@ if __name__ == '__main__':
             scen.update({key.name: reference_values[name_split[1]]})
 
     # set constraints
-    threshold_death = 3
-    threshold_damage = 1.7e9
-    threshold_investment = 10e9
-    constraints = [Constraint("max expected number of death", outcome_names="A.3_Expected Number of Deaths",
-                              function=lambda x: max(0, x - threshold_death)),
-                   Constraint("max expected annual damage", outcome_names="A.3_Expected Annual Damage",
-                              function=lambda x: max(0, x - threshold_damage)),
-                   Constraint("max expected dike investment cost", outcome_names="A.3_Dike Investment Costs",
-                              function=lambda x: max(0, x - threshold_investment))]
+    # threshold_death = 3
+    # threshold_damage = 1.7e9
+    # threshold_investment = 10e9
+    # constraints = [Constraint("max expected number of death", outcome_names="A.3_Expected Number of Deaths",
+    #                           function=lambda x: max(0, x - threshold_death)),
+    #                Constraint("max expected annual damage", outcome_names="A.3_Expected Annual Damage",
+    #                           function=lambda x: max(0, x - threshold_damage)),
+    #                Constraint("max expected dike investment cost", outcome_names="A.3_Dike Investment Costs",
+    #                           function=lambda x: max(0, x - threshold_investment))]
 
     n_seed = 5
-    nfe = 10000
+    nfe = 100000
     # find most favorable policies for each scenario
     for box, scenario in scenarios.items():
 
@@ -80,13 +80,19 @@ if __name__ == '__main__':
             ),
                 EpsilonProgress(),
             ]
+            # with MultiprocessingEvaluator(dike_model) as evaluator:
+            #     results, convergence = evaluator.optimize(nfe=nfe, searchover='levers',
+            #                                               reference=ref_scenario,
+            #                                               epsilons=[0.025] * len(dike_model.outcomes),
+            #                                               convergence=convergence_metrics,
+            #                                               constraints=constraints)
             with MultiprocessingEvaluator(dike_model) as evaluator:
                 results, convergence = evaluator.optimize(nfe=nfe, searchover='levers',
                                                           reference=ref_scenario,
                                                           epsilons=[0.025] * len(dike_model.outcomes),
-                                                          convergence=convergence_metrics,
-                                                          constraints=constraints)
+                                                          convergence=convergence_metrics)
 
+            convergence.to_csv(os.path.join('experiment', f"convergence_results_optimize_{box}_{seed}.csv"), index=False)
             print(f'Complete run: {box} {seed}')
 
 
