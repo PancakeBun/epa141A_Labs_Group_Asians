@@ -475,14 +475,14 @@ def get_model_for_problem_formulation(problem_formulation_id):
                 kind=direction,
             ),
             ScalarOutcome(
-                "RfR Investment Costs",
-                variable_name=[var for var in rfr_costs_variables],
+                "Evacuation Costs",
+                variable_name=[var for var in evac_cost_variables],
                 function=sum_over,
                 kind=direction,
             ),
             ScalarOutcome(
-                "Evacuation Costs",
-                variable_name=[var for var in evac_cost_variables],
+                "RfR Investment Costs",
+                variable_name=[var for var in rfr_costs_variables],
                 function=sum_over,
                 kind=direction,
             ),

@@ -49,15 +49,24 @@ if __name__ == '__main__':
             scen.update({key.name: reference_values[name_split[1]]})
 
     # set constraints
-    # threshold_death = 3
-    # threshold_damage = 1.7e9
-    # threshold_investment = 10e9
-    # constraints = [Constraint("max expected number of death", outcome_names="A.3_Expected Number of Deaths",
-    #                           function=lambda x: max(0, x - threshold_death)),
-    #                Constraint("max expected annual damage", outcome_names="A.3_Expected Annual Damage",
-    #                           function=lambda x: max(0, x - threshold_damage)),
-    #                Constraint("max expected dike investment cost", outcome_names="A.3_Dike Investment Costs",
-    #                           function=lambda x: max(0, x - threshold_investment))]
+    threshold_death_all = 20
+    threshold_RfR = 6e8
+    threshold_evacuation = 1e5
+    threshold_dike_all = 6e8
+    threshold_death = 10
+    threshold_damage = 5e8
+    constraints = [Constraint("max expected number of death", outcome_names="A.3_Expected Number of Deaths",
+                              function=lambda x: max(0, x - threshold_death)),
+                   Constraint("max expected annual damage", outcome_names="A.3_Expected Annual Damage",
+                              function=lambda x: max(0, x - threshold_damage)),
+                   Constraint("max expected number of death all", outcome_names="Expected Number of Deaths",
+                              function=lambda x: max(0, x - threshold_death_all)),
+                   Constraint("max Dike Investment Costs", outcome_names="Dike Investment Costs",
+                              function=lambda x: max(0, x - threshold_dike_all)),
+                   Constraint("max RfR Investment Costs", outcome_names="RfR Investment Costs",
+                              function=lambda x: max(0, x - threshold_RfR)),
+                   Constraint("max Evacuation Costs", outcome_names="Evacuation Costs",
+                              function=lambda x: max(0, x - threshold_evacuation))]
 
     n_seed = 5
     nfe = 100000
@@ -80,17 +89,17 @@ if __name__ == '__main__':
             ),
                 EpsilonProgress(),
             ]
-            # with MultiprocessingEvaluator(dike_model) as evaluator:
-            #     results, convergence = evaluator.optimize(nfe=nfe, searchover='levers',
-            #                                               reference=ref_scenario,
-            #                                               epsilons=[0.025] * len(dike_model.outcomes),
-            #                                               convergence=convergence_metrics,
-            #                                               constraints=constraints)
             with MultiprocessingEvaluator(dike_model) as evaluator:
                 results, convergence = evaluator.optimize(nfe=nfe, searchover='levers',
                                                           reference=ref_scenario,
                                                           epsilons=[0.025] * len(dike_model.outcomes),
-                                                          convergence=convergence_metrics)
+                                                          convergence=convergence_metrics,
+                                                          constraints=constraints)
+            # with MultiprocessingEvaluator(dike_model) as evaluator:
+            #     results, convergence = evaluator.optimize(nfe=nfe, searchover='levers',
+            #                                               reference=ref_scenario,
+            #                                               epsilons=[0.025] * len(dike_model.outcomes),
+            #                                               convergence=convergence_metrics)
 
             convergence.to_csv(os.path.join('experiment', f"convergence_results_optimize_{box}_{seed}.csv"), index=False)
             print(f'Complete run: {box} {seed}')

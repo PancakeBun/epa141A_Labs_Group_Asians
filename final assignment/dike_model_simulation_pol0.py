@@ -19,7 +19,8 @@ if __name__ == "__main__":
     ema_logging.log_to_stderr(ema_logging.INFO)
 
     # dike_model, planning_steps = get_model_for_problem_formulation(3) # default ooi
-    dike_model, planning_steps = get_model_for_problem_formulation(6) # ooi for dike ring 3
+    problem_formulation_id = 8 # ooi for dike ring 3
+    dike_model, planning_steps = get_model_for_problem_formulation(problem_formulation_id) # ooi for dike ring 3
 
     # Build a user-defined scenario and policy:
     reference_values = {
@@ -76,4 +77,4 @@ if __name__ == "__main__":
                                                uncertainty_sampling=Samplers.SOBOL)
 
     # save_results(results, os.path.join('experiment', 'pol0.tar.gz')) # save results with default ooi
-    save_results(results, os.path.join('experiment', f'pol0_sc{n_scenarios}.tar.gz')) # save results with ooi for dike ring 3
+    save_results(results, os.path.join('experiment', f'pol0_sc{n_scenarios}_{problem_formulation_id}.tar.gz')) # save results with ooi for dike ring 3
