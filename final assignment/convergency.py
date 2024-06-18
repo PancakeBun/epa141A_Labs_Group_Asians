@@ -1,23 +1,11 @@
 
 import os
-import sys
 
-import numpy as np
-import scipy as sp
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
-import networkx as nx
-import statsmodels.api as sm
 
-from platypus.algorithms import EpsMOEA, NSGAIII, MOEAD
-from ema_workbench.analysis import prim, cart, dimensional_stacking, parcoords
-from ema_workbench import ema_logging, load_results, MultiprocessingEvaluator, Constraint, Scenario
-from ema_workbench.analysis import feature_scoring
-from ema_workbench.analysis.scenario_discovery_util import RuleInductionType
-from ema_workbench.em_framework.salib_samplers import get_SALib_problem
-from ema_workbench.em_framework.optimization import ArchiveLogger, EpsilonProgress, epsilon_nondominated, Convergence, rebuild_platypus_population
-
+from ema_workbench.em_framework.optimization import ArchiveLogger, epsilon_nondominated
 from ema_workbench import (
     HypervolumeMetric,
     GenerationalDistanceMetric,
@@ -25,9 +13,7 @@ from ema_workbench import (
     InvertedGenerationalDistanceMetric,
     SpacingMetric,
 )
-
 from ema_workbench.em_framework.optimization import to_problem
-from SALib.analyze import sobol
 from problem_formulation import get_model_for_problem_formulation
 
 
@@ -92,8 +78,10 @@ def get_calculate_metrics(problem_model, folder_name, n_seed, no_scenario):
     return metrics, reference_set
 
 
-def plot_metrics(metrics, convergences):
-    sns.set_style("white")
+def plot_metrics(metrics, convergences, scenario_num):
+    # sns.set_style("white")
+
+    # fig2save = plt.gcf()
     fig, axes = plt.subplots(nrows=5, figsize=(8, 12), sharex=True)
     ax1, ax2, ax3, ax4, ax5 = axes
     for metric, convergence in zip(metrics, convergences):
@@ -111,21 +99,29 @@ def plot_metrics(metrics, convergences):
         ax5.set_ylabel("spacing")
         ax5.set_xlabel("nfe")
     sns.despine(fig)
+    fig.savefig(os.path.join(
+        folder, f'convergence_results_optimize_box_{scenario_num}.png'))
+    plt.show()
 
 
 if __name__ == '__main__':
     problem_formulation_id = 8
     model = dummy_model(problem_formulation_id)
 
-    folder = 'experiment_5'
-    seed_num = 2
-    scenario_num = 1
+    folder = 'mordm'
+    seed_num = 5
 
-    metrics, reference_set = get_calculate_metrics(model, folder, seed_num, scenario_num)
+    for scenario_num in range(1, 6):
+        print(scenario_num)
 
-    convergences = [pd.read_csv(os.path.join(
-        folder, f'convergence_results_optimize_box_{scenario_num}_max_{i}.csv'))
-        for i in range(seed_num)]
+        metrics, reference_set = get_calculate_metrics(model, folder, seed_num, scenario_num)
+        reference_set.to_csv(os.path.join(folder,
+                                          f'reference_set_scenario_{scenario_num}.csv'),
+                             index=False)
 
-    plot_metrics(metrics, convergences)
-    plt.show()
+        convergences = [pd.read_csv(os.path.join(
+            folder, f'convergence_results_optimize_box_{scenario_num}_max_{i}.csv'))
+            for i in range(seed_num)]
+
+        plot_metrics(metrics, convergences, scenario_num)
+
