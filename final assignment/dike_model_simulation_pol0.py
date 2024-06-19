@@ -1,6 +1,6 @@
 """
 Run models on 20000 randomly generated scenarios.
-The experiments and outcomes are used for uncertainty sensitivity analysis and scenario discoveries in analysis.ipynb
+The experiments and outcomes are used for uncertainty sensitivity analysis and scenario discoveries in open_exploration.ipynb
 """
 
 import os

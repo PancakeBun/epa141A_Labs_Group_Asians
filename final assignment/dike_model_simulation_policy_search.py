@@ -2,6 +2,8 @@
 Run evaluator.optimize() to find the most robust policies for 5 scenarios that are unfavorable to Dike Ring 3.
 
 The outcomes of the experiments will be used for sensitivity analysis on levers and scenario discovery to identify the most favorable policies for Dike Ring 3.
+
+The output files will be analysed in the notebook policy_evaluate.ipynb
 """
 
 import os
