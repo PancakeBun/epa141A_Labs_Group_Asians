@@ -41,19 +41,16 @@ if __name__ == '__main__':
     ref_scenario = Scenario("reference", **scen)
 
 
-    for policy in range(5):
-        # with policies
-        policy_df = pd.read_csv(os.path.join('mordm', f'reference_set_scenario_{policy}.csv'))
-        policy_df.columns = policy_df.columns.str.replace('z_', '').str.replace('z', '.')\
-                                            .str.replace('e_', 'e ').str.replace('R_', 'R ')
-        policy_dict = policy_df.loc[:, [l.name for l in dike_model.levers]].to_dict('records')
-        policies = [Policy(i, **policy) for (i, policy) in enumerate(policy_dict)]
+    # with policies
+    policy_df = pd.read_csv('mordm/policies2evaluate.csv')
+    policy_df.columns = policy_df.columns.str.replace('z_', '').str.replace('z', '.')\
+                                        .str.replace('e_', 'e ').str.replace('R_', 'R ')
+    policy_dict = policy_df.loc[:, [l.name for l in dike_model.levers]].to_dict('records')
+    policies = [Policy(i, **policy) for (i, policy) in enumerate(policy_dict)]
 
-        n_seed = 5
-        n_scenarios = 50
-        for i in range(n_seed):
-            random.seed(i)
-            with MultiprocessingEvaluator(dike_model) as evaluator:
-                results = evaluator.perform_experiments(scenarios=n_scenarios, policies=policies)
+    n_scenarios = 1000
 
-            save_results(results, os.path.join('mordm', f'results_policy_{policy}_seed_{i}.tar.gz'))
+    with MultiprocessingEvaluator(dike_model) as evaluator:
+        results = evaluator.perform_experiments(scenarios=n_scenarios, policies=policies)
+
+    save_results(results, 'mordm/results_policies2evaluate.tar.gz')
