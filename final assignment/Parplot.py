@@ -17,16 +17,6 @@ from ema_workbench.analysis.scenario_discovery_util import RuleInductionType
 from ema_workbench.em_framework.salib_samplers import get_SALib_problem
 from ema_workbench.em_framework.optimization import ArchiveLogger, EpsilonProgress, epsilon_nondominated, Convergence, rebuild_platypus_population
 
-from ema_workbench import (
-    HypervolumeMetric,
-    GenerationalDistanceMetric,
-    EpsilonIndicatorMetric,
-    InvertedGenerationalDistanceMetric,
-    SpacingMetric,
-)
-
-from ema_workbench.em_framework.optimization import to_problem
-from SALib.analyze import sobol
 from problem_formulation import get_model_for_problem_formulation
 
 

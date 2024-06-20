@@ -1,13 +1,10 @@
 """
 Run experiments using:
-    100 randomly generated scenarios. These scenarios were input to the robust_optimize() to identify the most robust policies.
-    the robust policies that the robust_optimize() function produce.
+    1000 randomly generated scenarios and selected polices from MOEA.
 
 The output of the experiments will be used in sensitivity analysis to identify favorable policies.
 """
 
-import os
-import random
 import pandas as pd
 
 from ema_workbench import save_results

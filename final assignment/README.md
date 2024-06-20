@@ -52,13 +52,35 @@ The output files are called **results_optimize_box_{box number}_max_{seed number
 * box number: takes the following values {1, 2, 3} (i.e 3 scenarios)
 * seed number: takes the following values {0, 1, 2, 3, 4} (i.e 5 seeds)
 
-These output files are saved in the directory **NEED TO FILL IN**
+These output files are saved in the directory **mordm**
+
+To plot the convergence metrics for all optimization results, on terminal, run the following command
+
+```bash
+python3 convergency.py
+```
+
+To evaluate the outcomes dimension, run the following command to plot parallel axis plots
+
+```bash
+python3 Parplot.py
+```
 
 ### Step 4: Sensitivity analysis and Scenario discovery for Policies
 
+Open the **policy_evaluate.ipynb**.
 
+Run cells in **policy** section to save polices for evaluation.
 
+On terminal, run the following command line to run experiments with selected polices.
 
+```bash
+python3 dike_model_simulation_policy_evaluate.py
+```
+
+Run cells in the **analysis** section of the **policy_evaluate.ipynb** notebook 
+to analyze the robustness of the selected policies 
+and discover scenarios for further analysis.
 
 
 
