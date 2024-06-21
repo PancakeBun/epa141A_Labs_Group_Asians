@@ -48,7 +48,7 @@ If run on a super computer supporting [MPIEvaluator](https://emaworkbench.readth
 python3 dike_model_simulation_policy_search_DB.py
 ```
 
-The output files are called **results_optimize_box_{box number}_max_{seed number}.tar.gz**, where
+The output files are called **results_optimize_box_{box number}_max_{seed number}.tar.gz**, and the convergence files are called **convergence_results_optimize_box_{box number}_max_{seed number}.csv** where
 * box number: takes the following values {1, 2, 3} (i.e 3 scenarios)
 * seed number: takes the following values {0, 1, 2, 3, 4} (i.e 5 seeds)
 
